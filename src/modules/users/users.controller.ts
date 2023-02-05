@@ -14,7 +14,7 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { SafeUser } from './entities/safe-user.entity';
-import { NotFoundInterceptor } from '../interceptors/not-found.interceptor';
+import { NotFoundInterceptor } from '../../interceptors/not-found.interceptor';
 import { UsersService } from './users.service';
 
 @Controller('user')
