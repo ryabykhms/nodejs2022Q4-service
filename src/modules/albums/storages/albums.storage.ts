@@ -47,7 +47,7 @@ export class AlbumsStorage {
     return this.albums.delete(id);
   }
 
-  public deleteByArtistId(artistId: string): void {
+  public removeArtistId(artistId: string): void {
     for (const album of this.albums.values()) {
       if (album.artistId === artistId) {
         this.albums.set(album.id, { ...album, artistId: null });
