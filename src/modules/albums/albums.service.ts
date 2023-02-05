@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { FavoritesService } from '../favorites/favorites.service';
 import { TracksService } from '../tracks/tracks.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -9,7 +10,10 @@ import { AlbumsStorage } from './storages/albums.storage';
 export class AlbumsService {
   constructor(
     private readonly collection: AlbumsStorage,
-    @Inject(TracksService) private tracksService: TracksService,
+    @Inject(forwardRef(() => TracksService))
+    private tracksService: TracksService,
+    @Inject(forwardRef(() => FavoritesService))
+    private favoritesService: FavoritesService,
   ) {}
 
   create(createAlbumDto: CreateAlbumDto): Album {
@@ -30,7 +34,11 @@ export class AlbumsService {
 
   delete(id: string): boolean {
     const isDeleted = this.collection.delete(id);
-    isDeleted && this.tracksService.removeAlbumId(id);
+
+    if (isDeleted) {
+      this.tracksService.removeAlbumId(id);
+      this.favoritesService.deleteAlbum(id);
+    }
 
     return isDeleted;
   }

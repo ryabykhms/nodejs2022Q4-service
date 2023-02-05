@@ -1,4 +1,5 @@
 import {
+  forwardRef,
   Inject,
   Injectable,
   UnprocessableEntityException,
@@ -13,9 +14,12 @@ import { FavoritesStorage } from './storages/favorites.storage';
 export class FavoritesService {
   constructor(
     private readonly collection: FavoritesStorage,
-    @Inject(AlbumsService) private albumsService: AlbumsService,
-    @Inject(ArtistsService) private artistsService: ArtistsService,
-    @Inject(TracksService) private tracksService: TracksService,
+    @Inject(forwardRef(() => AlbumsService))
+    private albumsService: AlbumsService,
+    @Inject(forwardRef(() => ArtistsService))
+    private artistsService: ArtistsService,
+    @Inject(forwardRef(() => TracksService))
+    private tracksService: TracksService,
   ) {}
 
   getAll(): FavoritesRepsonse {
