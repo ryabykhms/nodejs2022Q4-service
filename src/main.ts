@@ -1,7 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SwaggerModule } from '@nestjs/swagger';
 import { config } from 'dotenv';
+import { readFile } from 'fs/promises';
+import { resolve } from 'path';
+import { parse } from 'yaml';
 import { AppModule } from './app.module';
 
 config();
@@ -12,15 +15,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
 
-  const config = new DocumentBuilder()
-    .setTitle('NodeJS2022Q4')
-    .setDescription('Home music library service')
-    .setVersion('1.0.0')
-    .addTag('REST API')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/api/docs', app, document);
+  const docPath = resolve(__dirname, '..', 'doc', 'api.yaml');
+  const docContent = await readFile(docPath, 'utf-8');
+  const document = parse(docContent);
+  SwaggerModule.setup('/doc', app, document);
 
   await app.listen(port, () => console.log(`Server is running on ${port}`));
 }

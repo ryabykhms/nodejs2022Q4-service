@@ -70,7 +70,3 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
-
-### Documentation
-
-To view api documentation go to: _http://localhost:{PORT}/api/docs_
