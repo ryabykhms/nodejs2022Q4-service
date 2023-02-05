@@ -7,6 +7,7 @@ import { ArtistsStorage } from './storages/artists.storage';
 
 @Module({
   imports: [TracksModule, AlbumsModule],
+  exports: [ArtistsService],
   controllers: [ArtistsController],
   providers: [ArtistsService, ArtistsStorage],
 })
