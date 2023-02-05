@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone {repository URL}
+git clone https://github.com/ryabykhms/nodejs2022Q4-service
 ```
 
 ## Installing NPM modules
@@ -70,3 +70,7 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+
+### Documentation
+
+To view api documentation go to: _http://localhost:{PORT}/api/docs_
