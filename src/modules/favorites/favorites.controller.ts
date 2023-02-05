@@ -9,9 +9,11 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { NotFoundInterceptor } from 'src/interceptors/not-found.interceptor';
 import { FavoritesService } from './favorites.service';
 
+@ApiTags('Favorites')
 @Controller('favs')
 @UseInterceptors(NotFoundInterceptor)
 export class FavoritesController {

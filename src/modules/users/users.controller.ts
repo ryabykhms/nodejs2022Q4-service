@@ -16,7 +16,9 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import { SafeUser } from './entities/safe-user.entity';
 import { NotFoundInterceptor } from '../../interceptors/not-found.interceptor';
 import { UsersService } from './users.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('User')
 @Controller('user')
 @UseInterceptors(NotFoundInterceptor)
 export class UsersController {

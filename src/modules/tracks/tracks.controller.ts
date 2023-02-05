@@ -16,7 +16,9 @@ import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/tracks.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Track')
 @Controller('track')
 @UseInterceptors(NotFoundInterceptor)
 export class TracksController {
