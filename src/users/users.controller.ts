@@ -11,10 +11,10 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create.user.dto';
-import { UpdatePasswordDto } from './dto/update.password.dto';
+import { CreateUserDto } from './dto/create-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
+import { SafeUser } from './entities/safe-user.entity';
 import { NotFoundInterceptor } from './interceptors/not-found.interceptor';
-import { User } from './users.entity';
 import { UsersService } from './users.service';
 
 @Controller('user')
@@ -24,7 +24,7 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: CreateUserDto): User {
+  create(@Body() createUserDto: CreateUserDto): SafeUser {
     return this.usersService.create(createUserDto);
   }
 
@@ -34,7 +34,7 @@ export class UsersController {
   }
 
   @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: string): User {
+  getById(@Param('id', ParseUUIDPipe) id: string): SafeUser {
     return this.usersService.getById(id);
   }
 
@@ -42,7 +42,7 @@ export class UsersController {
   updatePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdatePasswordDto,
-  ): User {
+  ): SafeUser {
     return this.usersService.update(id, data);
   }
 
