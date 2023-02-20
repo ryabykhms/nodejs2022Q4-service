@@ -14,7 +14,7 @@ services:
     volumes:
       - ./src:/usr/app/src
     networks:
-      - rest-network
+      - rest-service-network
     restart: on-failure
     depends_on:
       - db
