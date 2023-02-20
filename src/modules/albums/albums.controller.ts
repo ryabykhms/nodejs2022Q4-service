@@ -12,7 +12,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { NotFoundInterceptor } from 'src/interceptors/not-found.interceptor';
+import { NotFoundInterceptor } from '../../interceptors/not-found.interceptor';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -27,21 +27,21 @@ export class AlbumsController {
   @ApiOperation({ summary: 'Add new album' })
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createAlbumDto: CreateAlbumDto): Album {
+  create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
     return this.albumsService.create(createAlbumDto);
   }
 
   @ApiOperation({ summary: 'Get all albums' })
   @Get()
   @HttpCode(HttpStatus.OK)
-  getAll() {
+  getAll(): Promise<Album[]> {
     return this.albumsService.getAll();
   }
 
   @ApiOperation({ summary: 'Get album by id' })
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  getById(@Param('id', ParseUUIDPipe) id: string): Album {
+  getById(@Param('id', ParseUUIDPipe) id: string): Promise<Album> {
     return this.albumsService.getById(id);
   }
 
@@ -51,14 +51,14 @@ export class AlbumsController {
   updatePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdateAlbumDto,
-  ): Album {
+  ): Promise<Album> {
     return this.albumsService.update(id, data);
   }
 
   @ApiOperation({ summary: 'Delete album by id' })
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseUUIDPipe) id: string): void {
-    return this.albumsService.delete(id) ? null : undefined;
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return (await this.albumsService.delete(id)) ? null : undefined;
   }
 }
