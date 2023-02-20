@@ -26,17 +26,17 @@ export class UsersController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createUserDto: CreateUserDto): SafeUser {
+  create(@Body() createUserDto: CreateUserDto): Promise<SafeUser> {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  getAll() {
+  getAll(): Promise<SafeUser[]> {
     return this.usersService.getAll();
   }
 
   @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: string): SafeUser {
+  getById(@Param('id', ParseUUIDPipe) id: string): Promise<SafeUser> {
     return this.usersService.getById(id);
   }
 
@@ -44,13 +44,13 @@ export class UsersController {
   updatePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdatePasswordDto,
-  ): SafeUser {
+  ): Promise<SafeUser> {
     return this.usersService.update(id, data);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseUUIDPipe) id: string): void {
-    return this.usersService.delete(id) ? null : undefined;
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return (await this.usersService.delete(id)) ? null : undefined;
   }
 }
