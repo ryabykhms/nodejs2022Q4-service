@@ -4,6 +4,7 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & install Docker](https://www.docker.com/). Once the installation is complete, launch docker.
 
 ## Downloading
 
@@ -11,21 +12,42 @@
 git clone https://github.com/ryabykhms/nodejs2022Q4-service
 ```
 
-## Installing NPM modules
+## Installation
 
-```
-npm install
-```
+- Switch to `develop` branch
+- Copy `.env.example` to `.env`
+- Run `npm install`
 
 ## Running application
-
-```
-npm start
-```
 
 After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
+
+Build services
+
+```
+npm run docker:build
+```
+
+Start containers
+
+```
+npm run docker:up
+```
+
+Run tests in containers
+
+```
+npm run docker:test
+```
+
+Scan docker images
+
+```
+npm run scan:api
+npm run scan:db
+```
 
 ## Testing
 
@@ -53,6 +75,24 @@ To run only specific test suite with authorization
 
 ```
 npm run test:auth -- <path to suite>
+```
+
+Generate migrations
+
+```
+npm run migration:generate
+```
+
+Manual migration running
+
+```
+npm run migration:run
+```
+
+Revert migration
+
+```
+npm run migration:revert
 ```
 
 ### Auto-fix and format
