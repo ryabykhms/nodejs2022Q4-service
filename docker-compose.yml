@@ -1,0 +1,44 @@
+version: '3.9'
+
+services:
+  api:
+    container_name: rest-service-api
+    image: rest-service-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - ${PORT}:${PORT}
+    volumes:
+      - ./src:/usr/app/src
+    networks:
+      - rest-network
+    restart: on-failure
+    depends_on:
+      - db
+    command: ['npm', 'run', 'start:dev']
+
+  db:
+    container_name: rest-service-db
+    image: rest-service-db
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+    env_file:
+      - .env
+    networks:
+      - rest-service-network
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    restart: on-failure
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=$DB_NAME
+      - POSTGRES_USER=$DB_USER
+      - POSTGRES_PASSWORD=$DB_PASSWORD
+networks:
+  rest-service-network:
+    driver: bridge
