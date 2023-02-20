@@ -10,7 +10,8 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { NotFoundInterceptor } from 'src/interceptors/not-found.interceptor';
+import { NotFoundInterceptor } from '../../interceptors/not-found.interceptor';
+import { FavoritesResponse } from './entities/favorites-response.entity';
 import { FavoritesService } from './favorites.service';
 
 @ApiTags('Favorites')
@@ -20,43 +21,43 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
-  getAll() {
+  getAll(): Promise<FavoritesResponse> {
     return this.favoritesService.getAll();
   }
 
   @Post('track/:id')
   @HttpCode(HttpStatus.CREATED)
-  createTrack(@Param('id', ParseUUIDPipe) id: string): void {
+  createTrack(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.favoritesService.addTrack(id);
   }
 
   @Post('artist/:id')
   @HttpCode(HttpStatus.CREATED)
-  createArtist(@Param('id', ParseUUIDPipe) id: string): void {
+  createArtist(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.favoritesService.addArtist(id);
   }
 
   @Post('album/:id')
   @HttpCode(HttpStatus.CREATED)
-  createAlbum(@Param('id', ParseUUIDPipe) id: string): void {
+  createAlbum(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.favoritesService.addAlbum(id);
   }
 
   @Delete('track/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteTrack(@Param('id', ParseUUIDPipe) id: string): void {
+  deleteTrack(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.favoritesService.deleteTrack(id);
   }
 
   @Delete('artist/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteArtist(@Param('id', ParseUUIDPipe) id: string): void {
+  deleteArtist(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.favoritesService.deleteArtist(id);
   }
 
   @Delete('album/:id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  deleteAlbum(@Param('id', ParseUUIDPipe) id: string): void {
+  deleteAlbum(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
     return this.favoritesService.deleteAlbum(id);
   }
 }
