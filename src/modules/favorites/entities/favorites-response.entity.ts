@@ -1,9 +1,3 @@
-import { Album } from '../../albums/entities/albums.entity';
-import { Artist } from '../../artists/entities/artists.entity';
-import { Track } from '../../tracks/entities/tracks.entity';
+import { Favorites } from './favorites.entity';
 
-export interface FavoritesRepsonse {
-  artists: Artist[];
-  albums: Album[];
-  tracks: Track[];
-}
+export type FavoritesResponse = Omit<Favorites, 'id' | 'toResponse'>;
