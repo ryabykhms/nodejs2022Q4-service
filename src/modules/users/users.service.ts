@@ -1,40 +1,59 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { SafeUser } from './entities/safe-user.entity';
-import { UsersStorage } from './storages/users.storage';
+import { User } from './entities/users.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly collection: UsersStorage) {}
+  constructor(
+    @InjectRepository(User)
+    private users: Repository<User>,
+  ) {}
 
-  create(createUserDto: CreateUserDto): SafeUser {
-    return this.collection.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<SafeUser> {
+    const createdUser = this.users.create(createUserDto);
+
+    return (await this.users.save(createdUser)).toResponse();
   }
 
-  getAll(): SafeUser[] {
-    return this.collection.getAll();
+  async getAll(): Promise<SafeUser[]> {
+    const users = await this.users.find();
+
+    return users.map((user) => user.toResponse());
   }
 
-  getById(id: string): SafeUser {
-    return this.collection.getById(id);
+  async getById(id: string): Promise<SafeUser> {
+    const user = await this.users.findOne({ where: { id } });
+
+    if (!user) {
+      return;
+    }
+
+    return user.toResponse();
   }
 
-  update(id: string, data: UpdatePasswordDto): SafeUser {
-    const user = this.collection.getByIdWithPassword(id);
+  async update(id: string, data: UpdatePasswordDto): Promise<SafeUser> {
+    const user = await this.users.findOne({ where: { id } });
 
     if (!user) {
       return;
     }
 
     if (user.password === data.oldPassword) {
-      return this.collection.update(id, { password: data.newPassword });
+      user.password = data.newPassword;
     } else {
       throw new ForbiddenException('Incorrect password');
     }
+
+    return (await this.users.save(user)).toResponse();
   }
 
-  delete(id: string): boolean {
-    return this.collection.delete(id);
+  async delete(id: string): Promise<boolean> {
+    const deletedUser = await this.users.delete(id);
+
+    return !!deletedUser.affected;
   }
 }

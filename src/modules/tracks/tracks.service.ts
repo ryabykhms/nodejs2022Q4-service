@@ -1,49 +1,49 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { FavoritesService } from '../favorites/favorites.service';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/tracks.entity';
-import { TracksStorage } from './storages/tracks.storage';
 
 @Injectable()
 export class TracksService {
   constructor(
-    private readonly collection: TracksStorage,
-    @Inject(forwardRef(() => FavoritesService))
-    private favoritesService: FavoritesService,
+    @InjectRepository(Track)
+    private tracks: Repository<Track>,
   ) {}
 
-  create(createTrackDto: CreateTrackDto): Track {
-    return this.collection.create(createTrackDto);
+  async create(createTrackDto: CreateTrackDto): Promise<Track> {
+    const newTrack = this.tracks.create(createTrackDto);
+
+    return this.tracks.save(newTrack);
   }
 
-  getAll(): Track[] {
-    return this.collection.getAll();
+  getAll(): Promise<Track[]> {
+    return this.tracks.find();
   }
 
-  getById(id: string): Track {
-    return this.collection.getById(id);
+  getById(id: string): Promise<Track> {
+    return this.tracks.findOne({ where: { id } });
   }
 
-  update(id: string, data: UpdateTrackDto): Track {
-    return this.collection.update(id, data);
-  }
+  async update(id: string, data: UpdateTrackDto): Promise<Track> {
+    const track = await this.tracks.findOne({ where: { id } });
 
-  delete(id: string): boolean {
-    const isDeleted = this.collection.delete(id);
-
-    if (isDeleted) {
-      this.favoritesService.deleteTrack(id);
+    if (!track) {
+      return;
     }
 
-    return isDeleted;
+    const updatedTrack = {
+      ...track,
+      ...data,
+    };
+
+    return this.tracks.save(updatedTrack);
   }
 
-  removeArtistId(artistId: string): void {
-    return this.collection.removeArtistId(artistId);
-  }
+  async delete(id: string): Promise<boolean> {
+    const deletedTrack = await this.tracks.delete(id);
 
-  removeAlbumId(albumId: string): void {
-    return this.collection.removeAlbumId(albumId);
+    return !!deletedTrack.affected;
   }
 }

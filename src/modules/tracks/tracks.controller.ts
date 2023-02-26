@@ -11,12 +11,12 @@ import {
   Put,
   UseInterceptors,
 } from '@nestjs/common';
-import { NotFoundInterceptor } from 'src/interceptors/not-found.interceptor';
-import { TracksService } from './tracks.service';
+import { ApiTags } from '@nestjs/swagger';
+import { NotFoundInterceptor } from '../../interceptors/not-found.interceptor';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './entities/tracks.entity';
-import { ApiTags } from '@nestjs/swagger';
+import { TracksService } from './tracks.service';
 
 @ApiTags('Track')
 @Controller('track')
@@ -26,17 +26,17 @@ export class TracksController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() createTrackDto: CreateTrackDto): Track {
+  create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.tracksService.create(createTrackDto);
   }
 
   @Get()
-  getAll() {
+  getAll(): Promise<Track[]> {
     return this.tracksService.getAll();
   }
 
   @Get(':id')
-  getById(@Param('id', ParseUUIDPipe) id: string): Track {
+  getById(@Param('id', ParseUUIDPipe) id: string): Promise<Track> {
     return this.tracksService.getById(id);
   }
 
@@ -44,13 +44,13 @@ export class TracksController {
   updatePassword(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: UpdateTrackDto,
-  ): Track {
+  ): Promise<Track> {
     return this.tracksService.update(id, data);
   }
 
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  delete(@Param('id', ParseUUIDPipe) id: string): void {
-    return this.tracksService.delete(id) ? null : undefined;
+  async delete(@Param('id', ParseUUIDPipe) id: string): Promise<void> {
+    return (await this.tracksService.delete(id)) ? null : undefined;
   }
 }

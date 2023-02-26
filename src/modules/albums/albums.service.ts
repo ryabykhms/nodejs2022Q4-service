@@ -1,49 +1,47 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { FavoritesService } from '../favorites/favorites.service';
-import { TracksService } from '../tracks/tracks.service';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './entities/albums.entity';
-import { AlbumsStorage } from './storages/albums.storage';
 
 @Injectable()
 export class AlbumsService {
   constructor(
-    private readonly collection: AlbumsStorage,
-    @Inject(forwardRef(() => TracksService))
-    private tracksService: TracksService,
-    @Inject(forwardRef(() => FavoritesService))
-    private favoritesService: FavoritesService,
+    @InjectRepository(Album)
+    private albums: Repository<Album>,
   ) {}
 
-  create(createAlbumDto: CreateAlbumDto): Album {
-    return this.collection.create(createAlbumDto);
+  create(createAlbumDto: CreateAlbumDto): Promise<Album> {
+    const createdAlbum = this.albums.create(createAlbumDto);
+    return this.albums.save(createdAlbum);
   }
 
-  getAll(): Album[] {
-    return this.collection.getAll();
+  getAll(): Promise<Album[]> {
+    return this.albums.find();
   }
 
-  getById(id: string): Album {
-    return this.collection.getById(id);
+  getById(id: string): Promise<Album> {
+    return this.albums.findOne({ where: { id } });
   }
 
-  update(id: string, data: UpdateAlbumDto): Album {
-    return this.collection.update(id, data);
-  }
+  async update(id: string, data: UpdateAlbumDto): Promise<Album> {
+    const album = await this.albums.findOne({ where: { id } });
 
-  delete(id: string): boolean {
-    const isDeleted = this.collection.delete(id);
-
-    if (isDeleted) {
-      this.tracksService.removeAlbumId(id);
-      this.favoritesService.deleteAlbum(id);
+    if (!album) {
+      return;
     }
 
-    return isDeleted;
+    const updatedAlbum = {
+      ...album,
+      ...data,
+    };
+
+    return this.albums.save(updatedAlbum);
   }
 
-  removeArtistId(artistId: string): void {
-    return this.collection.removeArtistId(artistId);
+  async delete(id: string): Promise<boolean> {
+    const deletedAlbum = await this.albums.delete(id);
+    return !!deletedAlbum.affected;
   }
 }
