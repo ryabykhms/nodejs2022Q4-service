@@ -1,5 +1,6 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { verifyPassword } from 'src/utils/verify-password';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
@@ -42,11 +43,16 @@ export class UsersService {
       return;
     }
 
-    if (user.password === data.oldPassword) {
-      user.password = data.newPassword;
-    } else {
+    const isPasswordVerified = await verifyPassword(
+      data.oldPassword,
+      user.password,
+    );
+
+    if (!isPasswordVerified) {
       throw new ForbiddenException('Incorrect password');
     }
+
+    user.password = data.newPassword;
 
     return (await this.users.save(user)).toResponse();
   }

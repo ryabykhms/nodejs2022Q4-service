@@ -6,12 +6,14 @@ import { AppService } from './app.service';
 import { LoggerMiddleware } from './logger/logger.middleware';
 import { AlbumsModule } from './modules/albums/albums.module';
 import { ArtistsModule } from './modules/artists/artists.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { FavoritesModule } from './modules/favorites/favorites.module';
 import { TracksModule } from './modules/tracks/tracks.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
+    AuthModule,
     UsersModule,
     ArtistsModule,
     AlbumsModule,

@@ -1,4 +1,6 @@
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -6,6 +8,7 @@ import {
   UpdateDateColumn,
   VersionColumn,
 } from 'typeorm';
+import { getPasswordHash } from '../../../utils/get-password-hash';
 
 @Entity('user')
 export class User {
@@ -27,7 +30,13 @@ export class User {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
 
-  toResponse(): Omit<User, 'password' | 'toResponse'> {
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = await getPasswordHash(this.password);
+  }
+
+  toResponse(): Omit<User, 'password' | 'toResponse' | 'hashPassword'> {
     const { id, login, version, createdAt, updatedAt } = this;
 
     return {
