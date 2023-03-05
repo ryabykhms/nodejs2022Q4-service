@@ -57,7 +57,7 @@ export class LoggerService extends ConsoleLogger {
 
   private write(level: LogLevel, message: string): void {
     const dirPath = join(process.env.PWD, 'logs');
-    const filePath = join(dirPath, level, '.log');
+    const filePath = join(dirPath, `${level}.log`);
     const size = Number(process.env.LOG_SIZE || 10) * BYTES_IN_KB;
 
     try {
