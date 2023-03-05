@@ -1,12 +1,7 @@
-import { Injectable, ConsoleLogger, LogLevel } from '@nestjs/common';
+import { ConsoleLogger, Injectable, LogLevel } from '@nestjs/common';
 import { config } from 'dotenv';
-import {
-  accessSync,
-  createWriteStream,
-  mkdirSync,
-  renameSync,
-  statSync,
-} from 'fs';
+import { accessSync, mkdirSync, renameSync, statSync } from 'fs';
+import { writeFile } from 'fs/promises';
 import { join } from 'path';
 
 config();
@@ -70,12 +65,11 @@ export class LoggerService extends ConsoleLogger {
       if (statSync(filePath).size >= size) {
         renameSync(
           filePath,
-          join(dirPath, level, Date.now().toString(), '.log'),
+          join(dirPath, `${level}${Date.now().toString()}.log`),
         );
       }
     } catch {}
 
-    const stream = createWriteStream(filePath, { flags: 'a' });
-    stream.write(`${message}\n`);
+    void writeFile(filePath, `${message}\n`, { flag: 'a' });
   }
 }

@@ -189,6 +189,42 @@ paths:
           description: Bad request
         409:
           description: Conflict. Login already exists
+  /auth/refresh:
+    post:
+      tags:
+        - Auth
+      security: []
+      summary: Refresh
+      description: Refresh access token usign refresh token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                refreshToken:
+                  type: string
+                  description: Refresh token
+              required:
+                - refreshToken
+      responses:
+        200:
+          description: Successful login.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                description: JWT Token
+        400:
+          $ref: '#/components/responses/BadRequest'
+        403:
+          description: Incorrect login or password
+
   /user:
     get:
       tags:
