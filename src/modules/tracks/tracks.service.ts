@@ -22,8 +22,12 @@ export class TracksService {
     return this.tracks.find();
   }
 
-  getById(id: string): Promise<Track> {
-    return this.tracks.findOne({ where: { id } });
+  async getById(id: string): Promise<Track> {
+    const track = await this.tracks.findOne({ where: { id } });
+
+    if (track) {
+      return track;
+    }
   }
 
   async update(id: string, data: UpdateTrackDto): Promise<Track> {

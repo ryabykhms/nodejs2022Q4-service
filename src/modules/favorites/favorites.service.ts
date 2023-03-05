@@ -129,7 +129,7 @@ export class FavoritesService {
 
   private async getFavorites(): Promise<Favorites> {
     const [favorites] = await this.favorites.find({
-      relations: ['artist', 'album', 'track'],
+      relations: ['artists', 'albums', 'tracks'],
     });
 
     if (favorites) {

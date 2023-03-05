@@ -5,11 +5,11 @@ config();
 
 export const options: DataSourceOptions = {
   type: process.env.TYPEORM_CONNECTION,
-  host: process.env.DB_HOST,
-  port: Number.parseInt(process.env.DB_PORT, 10),
-  username: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: process.env.POSTGRES_HOST,
+  port: Number.parseInt(process.env.POSTGRES_PORT, 10),
+  username: process.env.POSTGRES_USER,
+  password: process.env.POSTGRES_PASSWORD,
+  database: process.env.POSTGRES_DB,
   entities: [process.env.TYPEORM_ENTITIES],
   logging: process.env.TYPEORM_LOGGING === 'true',
   synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
