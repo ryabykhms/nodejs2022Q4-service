@@ -21,8 +21,12 @@ export class ArtistsService {
     return this.artists.find();
   }
 
-  getById(id: string): Promise<Artist> {
-    return this.artists.findOne({ where: { id } });
+  async getById(id: string): Promise<Artist> {
+    const artist = await this.artists.findOne({ where: { id } });
+
+    if (artist) {
+      return artist;
+    }
   }
 
   async update(id: string, data: UpdateArtistDto): Promise<Artist> {

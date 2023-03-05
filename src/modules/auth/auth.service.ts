@@ -3,7 +3,6 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { config } from 'dotenv';
 import { JwtPayload, sign, verify } from 'jsonwebtoken';
@@ -26,7 +25,6 @@ export class AuthService {
     @InjectRepository(User)
     private readonly users: Repository<User>,
     private userService: UsersService,
-    private jwtService: JwtService,
   ) {}
 
   async signup(user: CreateUserDto): Promise<SafeUser> {

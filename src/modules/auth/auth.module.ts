@@ -5,6 +5,7 @@ import { config } from 'dotenv';
 import { User } from '../users/entities/users.entity';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
+import { AuthGuard } from './auth.guard';
 import { AuthService } from './auth.service';
 
 config();
@@ -17,7 +18,8 @@ config();
     }),
     UsersModule,
   ],
+  exports: [AuthGuard],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthGuard],
 })
 export class AuthModule {}

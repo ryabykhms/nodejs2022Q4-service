@@ -4,6 +4,7 @@ import { options } from 'db/data-source';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { LoggerMiddleware } from './logger/logger.middleware';
+import { LoggerModule } from './logger/logger.module';
 import { AlbumsModule } from './modules/albums/albums.module';
 import { ArtistsModule } from './modules/artists/artists.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -19,6 +20,7 @@ import { UsersModule } from './modules/users/users.module';
     AlbumsModule,
     TracksModule,
     FavoritesModule,
+    LoggerModule,
     TypeOrmModule.forRoot(options),
   ],
   controllers: [AppController],

@@ -23,7 +23,7 @@ async function bootstrap() {
   app.useGlobalGuards(new AuthGuard());
   app.useLogger(logger);
 
-  const docPath = resolve(__dirname, '..', 'doc', 'api.yaml');
+  const docPath = resolve(process.cwd(), 'doc', 'api.yaml');
   const docContent = await readFile(docPath, 'utf-8');
   const document = parse(docContent);
   SwaggerModule.setup('/doc', app, document);

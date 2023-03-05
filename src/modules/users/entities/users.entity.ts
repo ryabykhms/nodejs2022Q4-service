@@ -9,6 +9,7 @@ import {
   VersionColumn,
 } from 'typeorm';
 import { getPasswordHash } from '../../../utils/get-password-hash';
+import { SafeUser } from './safe-user.entity';
 
 @Entity('user')
 export class User {
@@ -36,15 +37,15 @@ export class User {
     this.password = await getPasswordHash(this.password);
   }
 
-  toResponse(): Omit<User, 'password' | 'toResponse' | 'hashPassword'> {
+  toResponse(): SafeUser {
     const { id, login, version, createdAt, updatedAt } = this;
 
     return {
       id,
       login,
       version,
-      createdAt,
-      updatedAt,
+      createdAt: new Date(createdAt).getTime(),
+      updatedAt: new Date(updatedAt).getTime(),
     };
   }
 }

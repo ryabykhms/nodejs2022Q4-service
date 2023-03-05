@@ -1,4 +1,4 @@
-import { Injectable, Logger, LogLevel } from '@nestjs/common';
+import { Injectable, ConsoleLogger, LogLevel } from '@nestjs/common';
 import { config } from 'dotenv';
 import {
   accessSync,
@@ -14,7 +14,7 @@ config();
 const BYTES_IN_KB = 1024;
 
 @Injectable()
-export class LoggerService extends Logger {
+export class LoggerService extends ConsoleLogger {
   private level: LogLevel;
 
   constructor(name: string) {
