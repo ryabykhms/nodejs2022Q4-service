@@ -21,8 +21,12 @@ export class AlbumsService {
     return this.albums.find();
   }
 
-  getById(id: string): Promise<Album> {
-    return this.albums.findOne({ where: { id } });
+  async getById(id: string): Promise<Album> {
+    const album = await this.albums.findOne({ where: { id } });
+
+    if (album) {
+      return album;
+    }
   }
 
   async update(id: string, data: UpdateAlbumDto): Promise<Album> {

@@ -1,4 +1,9 @@
 .git
-node_modules
-db
+/node_modules
+/db/data
+/dist
+.git
+.cache
+postgres-data
+app-logs
 README.md

@@ -13,6 +13,7 @@ services:
       - ${PORT}:${PORT}
     volumes:
       - .:/usr/app
+      - /usr/app/node_modules
     networks:
       - rest-service-network
     restart: on-failure
@@ -31,14 +32,12 @@ services:
     networks:
       - rest-service-network
     ports:
-      - ${DB_PORT}:${DB_PORT}
+      - ${POSTGRES_PORT}:${POSTGRES_PORT}
     restart: on-failure
     volumes:
       - ./db/data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=$DB_NAME
-      - POSTGRES_USER=$DB_USER
-      - POSTGRES_PASSWORD=$DB_PASSWORD
+      PG_DATA: /var/lib/postgresql/data
 networks:
   rest-service-network:
     driver: bridge

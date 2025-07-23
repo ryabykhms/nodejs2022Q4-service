@@ -4,10 +4,10 @@ WORKDIR /usr/app
 
 COPY package*.json .
 
-RUN npm install 
+RUN npm install cache clean --force 
 
 COPY . .
 
-EXPOSE 4000
+EXPOSE ${PORT}
 
-CMD ["npm", "start"]
+CMD [ "npm", "run", "start:dev" ]
